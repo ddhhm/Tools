@@ -1,0 +1,36 @@
+Github told me how to create this as a git repository.  Following
+is the console output:
+
+[root@vultr bin]# git init
+Initialized empty Git repository in /root/bin/.git/
+[root@vultr bin]# git add README.md
+[root@vultr bin]# git add testport.py
+[root@vultr bin]# git commit -m "first commit"
+[master (root-commit) 4b04905] first commit
+ Committer: root <root@vultr.guest>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly:
+
+    git config --global user.name "Your Name"
+    git config --global user.email you@example.com
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 2 files changed, 56 insertions(+)
+ create mode 100644 README.md
+ create mode 100755 testport.py
+[root@vultr bin]# git remote add origin https://github.com/ddhhm/Tools.git
+[root@vultr bin]# git push -u origin master
+Username for 'https://github.com': kenw-github@emua.net
+Password for 'https://kenw-github@emua.net@github.com':
+Counting objects: 4, done.
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (4/4), 917 bytes | 0 bytes/s, done.
+Total 4 (delta 0), reused 0 (delta 0)
+To https://github.com/ddhhm/Tools.git
+ * [new branch]      master -> master
+Branch master set up to track remote branch master from origin.
+[root@vultr bin]#
