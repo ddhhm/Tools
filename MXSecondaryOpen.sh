@@ -23,7 +23,7 @@ AWK=/bin/awk
 GREP=/bin/grep
 ECHO=/bin/echo
 
-TESTPORT=./testport.py
+TESTPORT=~root/bin/testport.py
 IP=173.13.161.5
 PORT=26
 
