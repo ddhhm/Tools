@@ -2,8 +2,6 @@
 :INPUT ACCEPT [0:0]
 :FORWARD ACCEPT [0:0]
 :OUTPUT ACCEPT [695:129621]
--A INPUT -p tcp -m multiport --dports 25,465,587 -j f2b-postfix
--A INPUT -p tcp -m multiport --dports 22 -j f2b-sshd
 -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 -A INPUT -p icmp -j ACCEPT
 -A INPUT -i lo -j ACCEPT
