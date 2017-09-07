@@ -22,10 +22,11 @@ IPTABLES=/sbin/iptables
 AWK=/bin/awk
 GREP=/bin/grep
 ECHO=/bin/echo
+DEBUG=0
 
 TESTPORT=~root/bin/testport.py
 IP=173.13.161.5
-PORT=26
+PORT=587
 
 # Check if the local port 25 is open in our own firewal
 $IPTABLES -n -L INPUT | $GREP 'ACCEPT.*dpt:25' >/dev/null 2>&1
@@ -34,7 +35,11 @@ LocalPortNotOpen=$?
 # Get the rule number for iptables for port 25
 rulenum=`$IPTABLES -n -L INPUT --line-numbers | $GREP '\(ACCEPT\|DROP\|REJECT\).*dpt:25' | $AWK '{print $1}'`
 
-$ECHO rulenum for iptables toggle is $rulenum
+# Only echo if debug enabled
+if [ $DEBUG -eq 1 ] ; then
+    $ECHO rulenum for iptables toggle is $rulenum
+fi
+
 # If no rulenum found, exit as we need an SMTP iptables rule to proceed
 if [[ -z $rulenum ]] || [[ $rulenum = "" ]]; then
     echo "Could not find a rule for port 25."
@@ -49,19 +54,27 @@ $TESTPORT $IP $PORT >/dev/null 2>&1
 result=$?
 
 if [ $result -eq 1 ]; then
-    $ECHO Port is closed on primary MX
+    if [ $DEBUG -eq 1 ]; then
+        $ECHO Port is closed on primary MX
+    fi
     if [ $LocalPortNotOpen -eq 1 ]; then
-        $ECHO Opening local port 25
+        $ECHO Opening local port 25 because master is DOWN
         $IPTABLES -R INPUT $rulenum -p tcp -m state --state NEW -m tcp --dport 25 -j ACCEPT
     else
-        $ECHO Local port is already open. Doing nothing.
+        if [ $DEBUG -eq 1 ] ; then
+            $ECHO Local port is already open. Doing nothing.
+        fi
     fi
 elif [ $result -eq 0 ]; then
-    $ECHO Port is open on primary MX
+    if [ $DEBUG -eq 1 ] ; then
+        $ECHO Port is open on primary MX
+    fi
     if [ $LocalPortNotOpen -eq 0 ]; then
-        $ECHO Closing local port 25
+        $ECHO Closing local port 25 because master is back up
         $IPTABLES -R INPUT $rulenum -p tcp -m state --state NEW -m tcp --dport 25 -j DROP
     else
-	$ECHO Local port is already closed. Doing nothing.
+        if [ $DEBUG -eq 1 ] ; then
+	    $ECHO Local port is already closed. Doing nothing.
+        fi
     fi
 fi
